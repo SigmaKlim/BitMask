@@ -8,7 +8,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="af624419-e441-41f0-80fa-f09ac00c7fba" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/BitMask/BitMask.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/BitMask/BitMask.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/BitMask/Source.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/BitMask/Source.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -99,7 +98,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1698480069851</updated>
-      <workItem from="1698480070881" duration="782000" />
+      <workItem from="1698480070881" duration="913000" />
     </task>
     <servers />
   </component>
