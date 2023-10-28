@@ -13,9 +13,13 @@ public:
     static  BitMask     MakeAllZeros    (unsigned numBits);
     //returns a bitmask with all bits set to 1
     static  BitMask     MakeAllOnes     (unsigned numBits);
+    //returns unsigned 11..100..0
     static  unsigned    MakeLeftOnes    (unsigned numOnes);
+    //returns mask 11..100..0
     static  BitMask     MakeLeftOnes    (unsigned numBits, unsigned numOnes);
+    //returns unsigned 00..011..1
     static  unsigned    MakeRightOnes   (unsigned numOnes);
+    //returns mask 00..011..1
     static  BitMask     MakeRightOnes   (unsigned numBits, unsigned numOnes);
     //return a bitmask, where first bit is 1 and the rest are 0;
     static  BitMask     MakeOne         (unsigned numBits);
@@ -32,8 +36,9 @@ public:
             BitMask&    SetBitValue     (unsigned bitPosition, bool bitValue);
             //returns the bit value of bitPosition-th bit, starting from 0
             bool        GetBitValue     (unsigned        bitPosition) const;
+            //returns number of bits stored in the mask
             unsigned    GetNumBits      () const;
-    
+            //debug method used to view the mask as a vector of 1/0 strings
             std::vector<std::string> GetBinary() const;
     
     friend  bool        operator==      (const BitMask& left, const BitMask& right);
