@@ -13,15 +13,16 @@ A simple class used to handle unsigned integer bitmasks.
 - It is guaranteed that all bits to the left of the last significant bit are always zero
 
 ```
-    BitMask m1 = BitMask::MakeOne(100);
+    BitMask m1 = BitMask::MakeOne(100); //00..01
     BitMask m2(m1);
-    bool areSame = (m1 == m2); //true 
+    bool areSame = (m1 == m2); //true
+
     BitMask m3 = m1 << 30;
-    BitMask m4 = BitMask::MakeAllZeros(100);
+    BitMask m4 = BitMask::MakeAllZeros(100); //00..0
     m4.SetBitValue(30, 1);
     areSame = (m3 == m4); //true
 
-    BitMask m5 = BitMask::MakeAllOnes(50);
+    BitMask m5 = BitMask::MakeAllOnes(50); //11..1
     m5.SetBitValue(25, 0);
     BitMask m6 = ~m5;
     areSame = (m6 == (BitMask::MakeOne(50) << 25)); //true
