@@ -2,6 +2,9 @@
 #include <vector>
 #include <limits>
 #include <bitset>
+
+//a cell is just one unsigned int used to store a piece of mask
+
 class BitMask
 {
 public:
@@ -48,8 +51,10 @@ public:
     friend  bool        operator>=      (const BitMask& left, const BitMask& right);
     friend  bool        operator<=      (const BitMask& left, const BitMask& right);
 
+    //length of one cell in bits
     static  const unsigned  CELL_BITS   = std::numeric_limits<unsigned>::digits;
-    static  const unsigned  ALL_ONES    = std::numeric_limits<unsigned>::max(); //a cell consisting of all ones
+    //a cell consisting of all ones
+    static  const unsigned  ALL_ONES    = std::numeric_limits<unsigned>::max(); 
 
 private:
             //Used to nullify all bits to the left of _numBits-1, which might appear as a result of left-shift or inversion
