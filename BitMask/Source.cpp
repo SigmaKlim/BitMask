@@ -10,7 +10,7 @@ int main()
     BitMask m4 = BitMask::MakeAllZeros(100);
     m4.SetBitValue(30, 1);
     areSame = (m3 == m4); //true
-
+    
     BitMask m5 = BitMask::MakeAllOnes(50);
     m5.SetBitValue(25, 0);
     BitMask m6 = ~m5;
@@ -21,4 +21,5 @@ int main()
     BitMask m8 = m7;
     m7.SetBitValue(0, 0);
     bool is7LargerThan8 = (m7 > m8); //false
+
 }

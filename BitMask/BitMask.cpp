@@ -1,5 +1,6 @@
 ﻿#include "BitMask.h"
 #include <iostream>
+#include <cassert>
 
 BitMask::BitMask(const BitMask& other)
 {
@@ -52,22 +53,16 @@ unsigned BitMask::MakeRightOnes(unsigned numOnes)
 BitMask BitMask::MakeRightOnes(unsigned numBits, unsigned numOnes)
 {
     BitMask mask;
-    if (numOnes > numBits)
-    {
-        std::cout <<"Error\n";
-    }
-    else
-    {
-        mask._numBits = numBits;
-        const unsigned NUM_CELLS = numBits / CELL_BITS + (bool)(numBits % CELL_BITS);
-        mask._cells.resize(NUM_CELLS);
-        const unsigned ALL_ONES_NUM_CELLS = numOnes / CELL_BITS;
-        const unsigned ALL_ONES_NUM_BITS = numOnes % CELL_BITS;
-        for (unsigned i = 0; i < ALL_ONES_NUM_CELLS; i++)
-            mask._cells[i] = ALL_ONES;
-        if (ALL_ONES_NUM_BITS != 0)
+    assert(numOnes <= numBits);
+    mask._numBits = numBits;
+    const unsigned NUM_CELLS = numBits / CELL_BITS + (bool)(numBits % CELL_BITS);
+    mask._cells.resize(NUM_CELLS);
+    const unsigned ALL_ONES_NUM_CELLS = numOnes / CELL_BITS;
+    const unsigned ALL_ONES_NUM_BITS = numOnes % CELL_BITS;
+    for (unsigned i = 0; i < ALL_ONES_NUM_CELLS; i++)
+        mask._cells[i] = ALL_ONES;
+    if (ALL_ONES_NUM_BITS != 0)
             mask._cells[ALL_ONES_NUM_CELLS] = MakeRightOnes(ALL_ONES_NUM_BITS);
-    }
     return mask;
 }
 
@@ -86,24 +81,18 @@ unsigned BitMask::MakeLeftOnes(unsigned numOnes)
 BitMask BitMask::MakeLeftOnes(unsigned numBits, unsigned numOnes)
 {
     BitMask mask;
-    if (numOnes > numBits)
-    {
-        std::cout <<"Error\n";
-    }
-    else
-    {
-        mask._numBits = numBits;
-        const unsigned BIT_RESIDUE = numBits % CELL_BITS;
-        const unsigned NUM_CELLS = numBits / CELL_BITS + (bool)(BIT_RESIDUE);
-        mask._cells.resize(NUM_CELLS);
-        mask._cells[NUM_CELLS - 1] = MakeRightOnes(BIT_RESIDUE);
-        const unsigned ALL_ONES_NUM_CELLS = (numOnes - BIT_RESIDUE) / CELL_BITS;
-        const unsigned ONES_RESIDUE =  (numOnes - BIT_RESIDUE) % CELL_BITS;
-        for (unsigned i = 0; i < ALL_ONES_NUM_CELLS; i++)
-            mask._cells[NUM_CELLS - 1 - (bool)(BIT_RESIDUE) - i] = ALL_ONES;
-        if (ONES_RESIDUE != 0)
-            mask._cells[NUM_CELLS - 1 - (bool)(BIT_RESIDUE) - ALL_ONES_NUM_CELLS] = MakeLeftOnes(ONES_RESIDUE);
-    }
+    assert(numOnes <= numBits);
+    mask._numBits = numBits;
+    const unsigned BIT_RESIDUE = numBits % CELL_BITS;
+    const unsigned NUM_CELLS = numBits / CELL_BITS + (bool)(BIT_RESIDUE);
+    mask._cells.resize(NUM_CELLS);
+    mask._cells[NUM_CELLS - 1] = MakeRightOnes(BIT_RESIDUE);
+    const unsigned ALL_ONES_NUM_CELLS = (numOnes - BIT_RESIDUE) / CELL_BITS;
+    const unsigned ONES_RESIDUE =  (numOnes - BIT_RESIDUE) % CELL_BITS;
+    for (unsigned i = 0; i < ALL_ONES_NUM_CELLS; i++)
+        mask._cells[NUM_CELLS - 1 - (bool)(BIT_RESIDUE) - i] = ALL_ONES;
+    if (ONES_RESIDUE != 0)
+        mask._cells[NUM_CELLS - 1 - (bool)(BIT_RESIDUE) - ALL_ONES_NUM_CELLS] = MakeLeftOnes(ONES_RESIDUE);
     return mask;
 }
 
@@ -123,11 +112,7 @@ BitMask& BitMask::operator=(const BitMask& other)
 
 BitMask& BitMask::operator&=(const BitMask& other)
 {
-    if (_numBits != other._numBits)
-    {
-        std::cout << "Error!\n";
-        return *this;
-    }
+    assert(_numBits == other._numBits);
     for (unsigned i = 0; i < _cells.size(); i++)
         _cells[i] &= other._cells[i];
     return *this;
@@ -135,11 +120,7 @@ BitMask& BitMask::operator&=(const BitMask& other)
 
 BitMask& BitMask::operator|=(const BitMask& other)
 {
-    if (_numBits != other._numBits)
-    {
-        std::cout << "Error!\n";
-        return *this;
-    }
+    assert(_numBits == other._numBits);
     for (unsigned i = 0; i < _cells.size(); i++)
         _cells[i] |= other._cells[i];
     return *this;
@@ -210,8 +191,7 @@ BitMask& BitMask::SetBitValue(unsigned bitPosition, bool bitValue)
 {
     const unsigned CELL_OFFSET = bitPosition / CELL_BITS;
     const unsigned BIT_OFFSET = bitPosition % CELL_BITS;
-    if (bitPosition >= _numBits)
-            std::cout << "Error!\n";
+    assert(bitPosition < _numBits);
     unsigned cellValue = 1 << BIT_OFFSET;
     if (bitValue == 0)
     {
@@ -229,11 +209,7 @@ bool BitMask::GetBitValue(unsigned bitPosition) const
 {
     const unsigned CELL_OFFSET = bitPosition / CELL_BITS;
     const unsigned BIT_OFFSET = bitPosition % CELL_BITS;
-    if (bitPosition >= _numBits)
-    {
-        std::cout << "Error!\n";
-        return false;
-    }
+    assert(bitPosition < _numBits);
     const unsigned MASKED_VALUE = _cells[CELL_OFFSET] & (1 << BIT_OFFSET);
     return MASKED_VALUE != 0;    
 }
@@ -289,11 +265,7 @@ BitMask operator<<(const BitMask& mask, unsigned shift)
 
 bool operator==(const BitMask& left, const BitMask& right)
 {
-    if (left._numBits != right._numBits)
-    {
-        std::cout << "Error!\n";
-        return false;
-    }
+    assert(left._numBits == right._numBits);
     for (unsigned i = 0; i < left._cells.size(); i++)
         if (left._cells[i] != right._cells[i])
             return false;
@@ -307,11 +279,7 @@ bool operator!=(const BitMask& left, const BitMask& right)
 
 bool operator>(const BitMask& left, const BitMask& right)
 {
-    if (left._numBits != right._numBits)
-    {
-        std::cout << "Error!\n";
-        return false;
-    }
+    assert(left._numBits == right._numBits);
     for (unsigned i = 0; i < left._cells.size(); i++)
         if (left._cells[i] <= right._cells[i])
             return false;
@@ -320,11 +288,7 @@ bool operator>(const BitMask& left, const BitMask& right)
 
 bool operator<(const BitMask& left, const BitMask& right)
 {
-    if (left._numBits != right._numBits)
-    {
-        std::cout << "Error!\n";
-        return false;
-    }
+    assert(left._numBits == right._numBits);
     for (unsigned i = 0; i < left._cells.size(); i++)
         if (left._cells[i] >= right._cells[i])
             return false;
