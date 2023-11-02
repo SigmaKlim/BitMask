@@ -41,9 +41,12 @@ public:
             bool        GetBitValue     (unsigned        bitPosition) const;
             //returns number of bits stored in the mask
             unsigned    GetNumBits      () const;
+            //returns number of ints occupied by mask
+            unsigned GetNumCells        () const;
             //debug method used to view the mask as a vector of 1/0 strings
             std::vector<std::string> GetBinary() const;
-    
+            //return cell by index; used for interation
+            unsigned operator[] (unsigned index) const;
     friend  bool        operator==      (const BitMask& left, const BitMask& right);
     friend  bool        operator!=      (const BitMask& left, const BitMask& right);
     friend  bool        operator>       (const BitMask& left, const BitMask& right);

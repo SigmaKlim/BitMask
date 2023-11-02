@@ -17,7 +17,7 @@ BitMask BitMask::MakeAllZeros(unsigned numBits)
 {
     BitMask mask;
     mask._numBits = numBits;
-    const unsigned NUM_CELLS = numBits / CELL_BITS + (bool)(numBits & CELL_BITS);
+    const unsigned NUM_CELLS = numBits / CELL_BITS + (bool)(numBits % CELL_BITS);
     mask._cells.resize(NUM_CELLS);
     return mask;
 }
@@ -219,12 +219,23 @@ unsigned BitMask::GetNumBits() const
     return _numBits;
 }
 
+unsigned BitMask::GetNumCells() const
+{
+    return _cells.size();
+}
+
 std::vector<std::string> BitMask::GetBinary() const
 {
     std::vector <std::string> binaryStrings(_cells.size());
     for (unsigned i = 0; i < _cells.size(); i++)
         binaryStrings[i] = std::bitset<CELL_BITS>(_cells[i]).to_string();
     return binaryStrings;
+}
+
+unsigned BitMask::operator[](unsigned index) const
+{
+    assert(index < _cells.size());
+    return _cells[index];
 }
 
 void BitMask::KillInsignificantBits()
