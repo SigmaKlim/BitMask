@@ -138,7 +138,7 @@ BitMask& BitMask::operator>>=(unsigned shift)
         unsigned prevCellLeftover = 0;
         for (unsigned i = 0; i < _cells.size(); i++)
         {
-            const unsigned THIS_CELL_LEFTOVER = _cells[_cells.size() - 1 - i] & MakeRightOnes(BIT_SHIFT);
+            const unsigned THIS_CELL_LEFTOVER = (_cells[_cells.size() - 1 - i] & MakeRightOnes(BIT_SHIFT)) << (CELL_BITS - BIT_SHIFT);
             _cells[_cells.size() - 1 - i] >>= shift;
             _cells[_cells.size() - 1 - i] |= prevCellLeftover;
             prevCellLeftover = THIS_CELL_LEFTOVER;
@@ -154,13 +154,13 @@ BitMask& BitMask::operator<<=(unsigned shift)
     if (CELL_SHIFT > 0)
         for (unsigned i = 0; i < _cells.size(); i++)
             _cells[_cells.size() - 1 - i] = (_cells.size() - 1 - i - CELL_SHIFT < _cells.size())
-                ? _cells[_cells.size() - 1 - i - CELL_SHIFT] : 0;
+            ? _cells[_cells.size() - 1 - i - CELL_SHIFT] : 0;
     if (BIT_SHIFT > 0)
     {
         unsigned prevCellLeftover = 0;
         for (unsigned i = 0; i < _cells.size(); i++)
         {
-            const unsigned THIS_CELL_LEFTOVER = _cells[i] & MakeLeftOnes(BIT_SHIFT);
+            const unsigned THIS_CELL_LEFTOVER = (_cells[i] & MakeLeftOnes(BIT_SHIFT)) >> (CELL_BITS - BIT_SHIFT);
             _cells[i] <<= shift;
             _cells[i] |= prevCellLeftover;
             prevCellLeftover = THIS_CELL_LEFTOVER;
@@ -276,6 +276,10 @@ BitMask operator<<(const BitMask& mask, unsigned shift)
 
 bool operator==(const BitMask& left, const BitMask& right)
 {
+    if (left._numBits == 0 && right._numBits == 0)
+        return true;
+    else if (left._numBits == 0 || right._numBits == 0) //we enable comparison with default value BitMask()
+        return false;
     assert(left._numBits == right._numBits);
     for (unsigned i = 0; i < left._cells.size(); i++)
         if (left._cells[i] != right._cells[i])
